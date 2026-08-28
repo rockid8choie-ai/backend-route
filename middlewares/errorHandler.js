@@ -1,4 +1,6 @@
-export default function errorHandler(errName, req, res, next) {
+export default function errorHandler(err, req, res, next) {
+  const errName = typeof err === "string" ? err : err?.name;
+
   switch (errName) {
     case "ValidationError":
       return res.status(400).json({ message: "이름과 이메일은 필수입니다." });
@@ -11,6 +13,10 @@ export default function errorHandler(errName, req, res, next) {
     case "MulterError":
       return res.status(400).json({ message: "파일 업로드에 실패했습니다." });
     default:
-      return res.status(500).json({ message: "서버 내부 오류가 발생했습니다." });
+      return res.status(500).json({
+        message: "서버 내부 오류가 발생했습니다.",
+        error: err?.message,
+        code: err?.code,
+      });
   }
 }
