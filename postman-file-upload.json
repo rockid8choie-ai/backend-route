@@ -1,0 +1,33 @@
+{
+  "info": {
+    "name": "파일 업로드 실습",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "이미지 업로드",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "image",
+              "type": "file",
+              "src": "/Users/apple/백엔드 route/test-files/salary-1.png"
+            }
+          ]
+        },
+        "url": "http://localhost:3000/files"
+      }
+    },
+    {
+      "name": "파일 목록",
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:3000/files"
+      }
+    }
+  ]
+}

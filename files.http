@@ -1,0 +1,13 @@
+### 파일 목록
+GET http://localhost:3000/files
+
+### 이미지 업로드
+POST http://localhost:3000/files
+Content-Type: multipart/form-data; boundary=----FileBoundary
+
+------FileBoundary
+Content-Disposition: form-data; name="image"; filename="salary-1.png"
+Content-Type: image/png
+
+< ./test-files/salary-1.png
+------FileBoundary--

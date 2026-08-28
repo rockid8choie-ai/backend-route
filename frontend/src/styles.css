@@ -1,0 +1,40 @@
+:root {
+  font-family: sans-serif;
+  color: #111;
+  background: #f6f6f6;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  max-width: 640px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #ddd;
+}
+
+h1,
+h2 {
+  margin-top: 0;
+}
+
+form {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+input,
+button {
+  padding: 8px;
+}
+
+.api,
+.msg {
+  color: #555;
+  font-size: 14px;
+}
