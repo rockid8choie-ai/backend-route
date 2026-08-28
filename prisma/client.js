@@ -3,12 +3,25 @@ import pg from "pg";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
-if (!process.env.DATABASE_URL) {
+export function normalizeDatabaseUrl(value) {
+  if (!value) {
+    return "";
+  }
+
+  let url = value.trim();
+  url = url.replace(/^DATABASE_URL\s*=\s*/i, "");
+  url = url.replace(/^["']|["']$/g, "");
+  return url.trim();
+}
+
+const databaseUrl = normalizeDatabaseUrl(process.env.DATABASE_URL);
+
+if (!databaseUrl) {
   throw new Error("DATABASE_URL is not set");
 }
 
 const pool = new pg.Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: databaseUrl,
   max: 1,
   ssl: { rejectUnauthorized: false },
 });

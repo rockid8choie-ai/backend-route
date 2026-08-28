@@ -20,6 +20,28 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("/debug-db", (req, res) => {
+  const raw = process.env.DATABASE_URL || "";
+  const url = raw
+    .trim()
+    .replace(/^DATABASE_URL\s*=\s*/i, "")
+    .replace(/^["']|["']$/g, "");
+  let host = null;
+  try {
+    host = new URL(
+      url.replace(/^postgresql:/, "http:").replace(/^postgres:/, "http:"),
+    ).hostname;
+  } catch {
+    host = "parse-failed";
+  }
+  res.json({
+    hasDatabaseUrl: Boolean(raw),
+    length: raw.length,
+    startsWithPostgres: url.startsWith("postgresql://") || url.startsWith("postgres://"),
+    host,
+  });
+});
+
 app.use("/users", userRouter);
 app.use("/products", productRouter);
 app.use("/orders", orderRouter);
