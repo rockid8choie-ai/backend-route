@@ -27,6 +27,7 @@ app.use("/files", fileRouter);
 app.use("/files", express.static("uploads", { index: false, redirect: false }));
 
 app.use((err, req, res, next) => {
+  console.error(err);
   errorHandler(err.name, req, res, next);
 });
 

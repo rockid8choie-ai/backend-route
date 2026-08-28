@@ -14,8 +14,14 @@ export default function App() {
       fetch(`${API_URL}/users`),
       fetch(`${API_URL}/files`),
     ]);
-    setUsers(await userRes.json());
-    setFiles(await fileRes.json());
+    const usersData = await userRes.json();
+    const filesData = await fileRes.json();
+    if (!userRes.ok || !fileRes.ok) {
+      setMessage(usersData.message || filesData.message || "목록을 불러오지 못했습니다.");
+      return;
+    }
+    setUsers(usersData);
+    setFiles(filesData);
   };
 
   useEffect(() => {
