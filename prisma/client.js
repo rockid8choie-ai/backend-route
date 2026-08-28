@@ -14,16 +14,36 @@ export function normalizeDatabaseUrl(value) {
   return url.trim();
 }
 
+export function parseDatabaseUrl(databaseUrl) {
+  const parsed = new URL(
+    databaseUrl.replace(/^postgresql:/, "http:").replace(/^postgres:/, "http:"),
+  );
+
+  return {
+    host: decodeURIComponent(parsed.hostname),
+    port: Number(parsed.port || 5432),
+    database: decodeURIComponent(parsed.pathname.replace(/^\//, "") || "postgres"),
+    user: decodeURIComponent(parsed.username),
+    password: decodeURIComponent(parsed.password),
+  };
+}
+
 const databaseUrl = normalizeDatabaseUrl(process.env.DATABASE_URL);
 
 if (!databaseUrl) {
   throw new Error("DATABASE_URL is not set");
 }
 
+const parsed = parseDatabaseUrl(databaseUrl);
+
 const pool = new pg.Pool({
-  connectionString: databaseUrl,
-  max: 1,
+  host: parsed.host,
+  port: parsed.port,
+  database: parsed.database,
+  user: parsed.user,
+  password: parsed.password,
   ssl: { rejectUnauthorized: false },
+  max: 1,
 });
 
 const adapter = new PrismaPg(pool);

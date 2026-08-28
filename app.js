@@ -20,6 +20,10 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("/", (req, res) => {
+  res.json({ ok: true, service: "backend-route" });
+});
+
 app.get("/debug-db", (req, res) => {
   const raw = process.env.DATABASE_URL || "";
   const url = raw
@@ -27,10 +31,15 @@ app.get("/debug-db", (req, res) => {
     .replace(/^DATABASE_URL\s*=\s*/i, "")
     .replace(/^["']|["']$/g, "");
   let host = null;
+  let user = null;
+  let port = null;
   try {
-    host = new URL(
+    const parsed = new URL(
       url.replace(/^postgresql:/, "http:").replace(/^postgres:/, "http:"),
-    ).hostname;
+    );
+    host = parsed.hostname;
+    user = decodeURIComponent(parsed.username);
+    port = parsed.port;
   } catch {
     host = "parse-failed";
   }
@@ -39,6 +48,8 @@ app.get("/debug-db", (req, res) => {
     length: raw.length,
     startsWithPostgres: url.startsWith("postgresql://") || url.startsWith("postgres://"),
     host,
+    user,
+    port,
   });
 });
 
