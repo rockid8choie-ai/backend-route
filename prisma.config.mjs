@@ -1,10 +1,5 @@
-import path from "node:path";
 import "dotenv/config";
-import { defineConfig, env } from "prisma/config";
-
-const databaseUrl = env("DATABASE_URL");
-const sqlitePath = path.resolve(databaseUrl.replace(/^file:/, ""));
-const studioUrl = `file://${sqlitePath}`;
+import { defineConfig } from "prisma/config";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -12,6 +7,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: studioUrl,
+    url: process.env.DIRECT_URL || process.env.DATABASE_URL,
   },
 });
