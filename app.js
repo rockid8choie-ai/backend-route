@@ -24,6 +24,10 @@ app.get("/", (req, res) => {
   res.json({ ok: true, service: "backend-route" });
 });
 
+app.get("/health", (req, res) => {
+  res.json({ ok: true, status: "ok" });
+});
+
 app.get("/debug-db", (req, res) => {
   const raw = process.env.DATABASE_URL || "";
   const url = raw
@@ -65,7 +69,7 @@ app.use((err, req, res, next) => {
 });
 
 if (process.env.NODE_ENV !== "production") {
-  const PORT = process.env.PORT || 3000;
+  const PORT = process.env.PORT || 4000;
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
