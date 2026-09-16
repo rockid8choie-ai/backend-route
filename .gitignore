@@ -10,3 +10,4 @@ prisma/dev.db-journal
 generated
 test-files
 .vscode
+.vercel

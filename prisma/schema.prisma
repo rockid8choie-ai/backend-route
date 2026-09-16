@@ -11,9 +11,25 @@ model User {
   id        Int      @id @default(autoincrement())
   name      String
   email     String   @unique
+  password  String? // bcrypt 해시 — 기존(미션 7) 행은 비밀번호가 없어 로그인 불가
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   files     File[]
+  works     Work[]
+}
+
+model Work {
+  id        Int      @id @default(autoincrement())
+  title     String
+  category  String
+  location  String
+  priority  String   @default("보통")
+  status    String   @default("접수")
+  desc      String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model File {

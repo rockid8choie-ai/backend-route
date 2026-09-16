@@ -4,13 +4,23 @@ import userRouter from "./routes/userRouter.js";
 import productRouter from "./routes/productRouter.js";
 import orderRouter from "./routes/orderRouter.js";
 import fileRouter from "./routes/fileRouter.js";
+import authRouter from "./routes/authRouter.js";
+import workRouter from "./routes/workRouter.js";
+import aiRouter from "./routes/aiRouter.js";
 import errorHandler from "./middlewares/errorHandler.js";
+import ensureSchema from "./prisma/ensureSchema.js";
 
 const app = express();
 
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "https://bfs-mission6.vercel.app",
+  "http://localhost:5173",
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: allowedOrigins,
   }),
 );
 app.use(express.json());
@@ -57,6 +67,14 @@ app.get("/debug-db", (req, res) => {
   });
 });
 
+// 인증/작업 라우트 진입 전에 스키마가 준비됐는지 보장 (1회만 실제 실행)
+app.use(["/auth", "/works"], (req, res, next) => {
+  ensureSchema().then(() => next(), next);
+});
+
+app.use("/auth", authRouter);
+app.use("/works", workRouter);
+app.use("/ai", aiRouter);
 app.use("/users", userRouter);
 app.use("/products", productRouter);
 app.use("/orders", orderRouter);
