@@ -20,6 +20,10 @@ export default function errorHandler(err, req, res, next) {
       return res.status(503).json({ message: err?.message });
     case "AiRequestError":
       return res.status(502).json({ message: err?.message });
+    case "ConflictPaidError":
+      return res.status(409).json({ message: err?.message });
+    case "PaymentConfirmError":
+      return res.status(502).json({ message: err?.message });
     case "FileRequiredError":
       return res.status(400).json({ message: "파일이 필요합니다." });
     case "MulterError":

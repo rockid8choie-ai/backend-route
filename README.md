@@ -25,6 +25,14 @@ Express + Prisma + Supabase(Postgres) 백엔드입니다. 미션 7에서 Vercel 
 | PATCH | `/works/:id` | 상태 변경 `{status}` (접수/배정/완료) |
 | DELETE | `/works/:id` | 삭제 |
 
+### 결제(우선처리) `/payments` — Bearer 토큰 필요
+| 메서드 | 경로 | 설명 |
+|---|---|---|
+| POST | `/payments/checkout` | `{workId}` → 주문 생성 `{orderId, amount, orderName}` — 금액(9,900원)은 서버가 확정, pending 주문은 재사용 |
+| POST | `/payments/confirm` | `{orderId, paymentKey, amount}` → 토스 최종 승인(금액 대조) → 작업 fastTrack 전환, 영수증 URL 반환 |
+
+`TOSS_SECRET_KEY`가 없으면 토스 공식 공개 샌드박스 키로 동작합니다(실청구 없음).
+
 ### AI 분류 `/ai` — Bearer 토큰 필요
 | 메서드 | 경로 | 설명 |
 |---|---|---|

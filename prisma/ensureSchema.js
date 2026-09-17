@@ -21,6 +21,24 @@ const DDL = [
       REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE
   )`,
   `CREATE INDEX IF NOT EXISTS "Work_userId_idx" ON "Work"("userId")`,
+  `ALTER TABLE "Work" ADD COLUMN IF NOT EXISTS "fastTrack" BOOLEAN NOT NULL DEFAULT FALSE`,
+  `CREATE TABLE IF NOT EXISTS "Payment" (
+    "id" SERIAL PRIMARY KEY,
+    "orderId" TEXT NOT NULL UNIQUE,
+    "amount" INTEGER NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'pending',
+    "paymentKey" TEXT,
+    "method" TEXT,
+    "receiptUrl" TEXT,
+    "failReason" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "approvedAt" TIMESTAMP(3),
+    "userId" INTEGER NOT NULL,
+    "workId" INTEGER NOT NULL,
+    CONSTRAINT "Payment_workId_fkey" FOREIGN KEY ("workId")
+      REFERENCES "Work"("id") ON DELETE CASCADE ON UPDATE CASCADE
+  )`,
+  `CREATE INDEX IF NOT EXISTS "Payment_userId_idx" ON "Payment"("userId")`,
 ];
 
 let ensured = null;

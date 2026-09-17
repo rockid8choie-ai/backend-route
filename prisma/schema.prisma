@@ -19,17 +19,36 @@ model User {
 }
 
 model Work {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   title     String
   category  String
   location  String
-  priority  String   @default("보통")
-  status    String   @default("접수")
-  desc      String   @default("")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  priority  String    @default("보통")
+  status    String    @default("접수")
+  desc      String    @default("")
+  fastTrack Boolean   @default(false) // 우선처리 결제 완료 여부
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   userId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments  Payment[]
+}
+
+// 우선처리 결제 — 토스페이먼츠. 금액은 서버가 확정하고 승인 시 대조한다.
+model Payment {
+  id         Int       @id @default(autoincrement())
+  orderId    String    @unique
+  amount     Int
+  status     String    @default("pending") // pending | paid | failed
+  paymentKey String?
+  method     String?
+  receiptUrl String?
+  failReason String?
+  createdAt  DateTime  @default(now())
+  approvedAt DateTime?
+  userId     Int
+  workId     Int
+  work       Work      @relation(fields: [workId], references: [id], onDelete: Cascade)
 }
 
 model File {

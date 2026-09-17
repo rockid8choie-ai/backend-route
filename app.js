@@ -7,6 +7,7 @@ import fileRouter from "./routes/fileRouter.js";
 import authRouter from "./routes/authRouter.js";
 import workRouter from "./routes/workRouter.js";
 import aiRouter from "./routes/aiRouter.js";
+import paymentRouter from "./routes/paymentRouter.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import ensureSchema from "./prisma/ensureSchema.js";
 
@@ -67,12 +68,13 @@ app.get("/debug-db", (req, res) => {
   });
 });
 
-// 인증/작업 라우트 진입 전에 스키마가 준비됐는지 보장 (1회만 실제 실행)
-app.use(["/auth", "/works"], (req, res, next) => {
+// 인증/작업/결제 라우트 진입 전에 스키마가 준비됐는지 보장 (1회만 실제 실행)
+app.use(["/auth", "/works", "/payments"], (req, res, next) => {
   ensureSchema().then(() => next(), next);
 });
 
 app.use("/auth", authRouter);
+app.use("/payments", paymentRouter);
 app.use("/works", workRouter);
 app.use("/ai", aiRouter);
 app.use("/users", userRouter);
